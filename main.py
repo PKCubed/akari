@@ -1,12 +1,18 @@
+from akari.fixture import by_name, DMX
+from akari.dmx_out import send
 from fixtures import FIXTURES
-from fixture import by_name, DMX
-from dmx_out import send
+import time
 
 rig = by_name(FIXTURES)
 
-rig["FOH 1"].set_color(255, 0, 0)
-rig["FOH 1"].set_dimmer(255)
-rig["Back 2"].set_color(0, 0, 255)
-rig["Side L"].set_dimmer(200)
+r = 0
 
-send(DMX)
+while True:
+    r += 10
+    if r > 255:
+        r = 0
+    rig["Spot 1"].set_color(r, 0, 0)
+    send(DMX)
+    time.sleep(0.05)
+    
+

@@ -5,23 +5,23 @@ A small 3D visualizer for DMX lights. Fixtures are defined in plain Python
 while it runs and the view reloads itself.
 
 ## Setup
-    pip install -r requirements.txt     # moderngl, pygame, numpy, pillow
+    pip install -r akari/requirements.txt     # moderngl, pygame, numpy, pillow
 
 ## Run
-    python viz.py                # listen for Art-Net (UDP 6454) and sACN (UDP 5568)
-    python viz.py --demo         # self-animating, no network needed
-    python send_test.py          # in another terminal: sends sACN test data
-    python send_test.py --proto artnet --pattern chase
+    python akari/viz.py                # listen for Art-Net (UDP 6454) and sACN (UDP 5568)
+    python akari/viz.py --demo         # self-animating, no network needed
+    python akari/send_test.py          # in another terminal: sends sACN test data
+    python akari/send_test.py --proto artnet --pattern chase
 
 ## Performance
 The resolution drops automatically to hold 30 fps (`--target-fps 30`, `0` turns it off);
 the title bar shows the fps and current resolution. Needs OpenGL 3.3.
 
-    python viz.py --bench        # prints your GPU and ms/frame at 1280x720
+    python akari/viz.py --bench        # prints your GPU and ms/frame at 1280x720
 
 At startup it prints `[gl] <renderer>`. If that says **llvmpipe** you're on software
 rendering (the CPU), not your GPU: install/fix the graphics driver. On a laptop with an
-NVIDIA GPU: `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia python viz.py`.
+NVIDIA GPU: `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia python akari/viz.py`.
 
 Quality knobs: `--scale` (max render resolution, default 1.0), `--haze-scale` (haze
 resolution relative to the render, default 0.5), `--samples` (haze samples per beam,
@@ -50,7 +50,14 @@ Universe numbering: fixtures use sACN-style numbers (first = 1). Art-Net univers
 maps to universe 1 (`ARTNET_UNIVERSE_OFFSET = 1`; set 0 if your console counts differently).
 
 ## Files
-    viz.py        window, camera, renderer, reload  fixture.py   Wash model + rig loader
-    shaders/      surface, haze, composite passes   dmx_in.py    Art-Net / sACN receivers
-    fixtures.py   YOUR RIG                        patterns.py  test looks
-    send_test.py  test DMX sender
+You only edit the two files at the top level:
+
+    main.py       YOUR SHOW CODE
+    fixtures.py   YOUR RIG
+
+Everything else lives in `akari/`:
+
+    akari/viz.py        window, camera, renderer, reload  akari/fixture.py   Wash model + rig loader
+    akari/shaders/      surface, haze, composite passes   akari/dmx_in.py    Art-Net / sACN receivers
+    akari/dmx_out.py    sACN / Art-Net sender             akari/patterns.py  test looks
+    akari/send_test.py  test DMX sender
