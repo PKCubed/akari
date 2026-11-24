@@ -62,7 +62,7 @@ def make_noise(n=64, seed=7):
 
 
 VIEWS = {   # yaw, pitch, distance, target
-    1: (0.10, 0.34, 14.5, (0.0, 1.5, -0.3)),     # balcony, centre (default)
+    1: (0.0, 0.08, 14.5, (0.0, 3, -0.3)),        # balcony, centre (default)
     2: (0.55, 0.38, 15.0, (0.0, 1.6, -0.5)),     # three-quarter from the balcony
     3: (1.45, 0.12, 15.0, (0.0, 2.2, -0.5)),     # from stage-right side
     4: (0.00, 1.35, 16.0, (0.0, 0.0, -0.5)),     # top-down plan view
