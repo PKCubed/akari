@@ -13,8 +13,19 @@ while it runs and the view reloads itself.
     python send_test.py          # in another terminal: sends sACN test data
     python send_test.py --proto artnet --pattern chase
 
-If it runs slowly: `--scale 0.5` (render at half resolution) and/or `--steps 32`
-(fewer haze samples). Needs OpenGL 3.3.
+## Performance
+The resolution drops automatically to hold 30 fps (`--target-fps 30`, `0` turns it off);
+the title bar shows the fps and current resolution. Needs OpenGL 3.3.
+
+    python viz.py --bench        # prints your GPU and ms/frame at 1280x720
+
+At startup it prints `[gl] <renderer>`. If that says **llvmpipe** you're on software
+rendering (the CPU), not your GPU: install/fix the graphics driver. On a laptop with an
+NVIDIA GPU: `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia python viz.py`.
+
+Quality knobs: `--scale` (max render resolution, default 1.0), `--haze-scale` (haze
+resolution relative to the render, default 0.5), `--samples` (haze samples per beam,
+default 8). Lights at zero cost nothing.
 
 ## Controls
 Mouse: left-drag orbit, right/middle-drag pan, wheel zoom.
@@ -39,7 +50,7 @@ Universe numbering: fixtures use sACN-style numbers (first = 1). Art-Net univers
 maps to universe 1 (`ARTNET_UNIVERSE_OFFSET = 1`; set 0 if your console counts differently).
 
 ## Files
-    viz.py        window, camera, hot reload      fixture.py   Wash model + rig loader
-    scene.frag    the whole scene as one shader   dmx_in.py    Art-Net / sACN receivers
+    viz.py        window, camera, renderer, reload  fixture.py   Wash model + rig loader
+    shaders/      surface, haze, composite passes   dmx_in.py    Art-Net / sACN receivers
     fixtures.py   YOUR RIG                        patterns.py  test looks
     send_test.py  test DMX sender
