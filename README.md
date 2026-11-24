@@ -1,6 +1,6 @@
 # lightviz
 
-A small 3D visualizer for wash lights. Fixtures are defined in plain Python
+A small 3D visualizer for DMX lights. Fixtures are defined in plain Python
 (`fixtures.py`); levels arrive over Art-Net or sACN. Edit and save `fixtures.py`
 while it runs and the view reloads itself.
 

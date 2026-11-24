@@ -7,7 +7,6 @@
 """
 import argparse
 import socket
-import struct
 import sys
 import time
 import uuid
@@ -16,27 +15,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import patterns                                  # noqa: E402
-from dmx_in import ACN_ID                        # noqa: E402
+from dmx_out import build_artnet, build_sacn
 from fixture import load_rig                     # noqa: E402
-
-
-def build_artnet(universe, data, seq):
-    """universe = Art-Net port-address (0-based)."""
-    return (b"Art-Net\x00" + struct.pack("<H", 0x5000) + bytes([0, 14, seq, 0])
-            + struct.pack("<BB", universe & 0xFF, (universe >> 8) & 0x7F)
-            + struct.pack(">H", 512) + bytes(data).ljust(512, b"\0")[:512])
-
-
-def build_sacn(universe, data, seq, cid, name=b"lightviz-test", priority=100):
-    data = bytes(data).ljust(512, b"\0")[:512]
-    pkt = struct.pack(">HH", 0x0010, 0x0000) + ACN_ID                       # preamble
-    pkt += struct.pack(">HI", 0x7000 | 622, 4) + cid                        # root layer
-    pkt += struct.pack(">HI", 0x7000 | 600, 2) + name.ljust(64, b"\0")      # framing layer
-    pkt += bytes([priority]) + struct.pack(">H", 0) + bytes([seq, 0]) + struct.pack(">H", universe)
-    pkt += struct.pack(">H", 0x7000 | 523) + bytes([2, 0xA1])               # DMP layer
-    pkt += struct.pack(">HHH", 0, 1, 513) + b"\0" + data
-    assert len(pkt) == 638
-    return pkt
 
 
 def main():
